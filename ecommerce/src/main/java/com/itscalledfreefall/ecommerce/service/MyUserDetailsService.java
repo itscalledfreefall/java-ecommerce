@@ -19,7 +19,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        LocalUser user = localUserDao.findLocalUsersByUsernameIgnoreCase(username);
+        LocalUser user = localUserDao.findLocalUsersByUsernameIgnoreCase(username).get();
         if(user == null){
             System.out.println("User not found");
             throw new UsernameNotFoundException("User not found");

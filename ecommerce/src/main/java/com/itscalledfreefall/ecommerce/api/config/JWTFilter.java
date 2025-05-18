@@ -1,4 +1,4 @@
-package com.itscalledfreefall.ecommerce.api.controller;
+package com.itscalledfreefall.ecommerce.api.config;
 
 import com.itscalledfreefall.ecommerce.service.JWTService;
 import com.itscalledfreefall.ecommerce.service.MyUserDetailsService;
