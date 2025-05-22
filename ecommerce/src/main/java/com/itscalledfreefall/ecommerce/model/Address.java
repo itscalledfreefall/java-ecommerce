@@ -8,7 +8,7 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id ;
+    private long id ;
 
     @Column(name = "addresLine1",nullable = false)
     private String addressLine1 ;
@@ -26,7 +26,7 @@ public class Address {
     @JoinColumn(name = "user_id")
     private LocalUser user ;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

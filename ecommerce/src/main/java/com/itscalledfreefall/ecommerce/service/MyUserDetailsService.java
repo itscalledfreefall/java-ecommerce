@@ -13,8 +13,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {
-    @Autowired
+
     private LocalUserDao localUserDao;
+
+    public MyUserDetailsService(LocalUserDao localUserDao){
+        this.localUserDao = localUserDao;
+    }
 
 
     @Override
