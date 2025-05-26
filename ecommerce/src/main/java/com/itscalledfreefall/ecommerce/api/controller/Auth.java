@@ -1,10 +1,12 @@
 package com.itscalledfreefall.ecommerce.api.controller;
 
+import com.itscalledfreefall.ecommerce.api.model.LoginBody;
+import com.itscalledfreefall.ecommerce.api.model.LoginResponse;
 import com.itscalledfreefall.ecommerce.api.model.RegistrationBody;
 import com.itscalledfreefall.ecommerce.expections.UserAlreadyExistsException;
 import com.itscalledfreefall.ecommerce.service.UserService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class Auth {
-    @Autowired
+
+
+    public Auth(UserService service){
+        this.service =  service;
+    }
     private UserService service;
 
     @PostMapping("/register")
@@ -28,5 +34,19 @@ public class Auth {
         catch (UserAlreadyExistsException e ){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
+    }
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginBody  loginBody){
+    String jwt = service.login(loginBody);
+    if(jwt == null){
+        System.out.println("JWT is null");
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).build();
+    }
+    else{
+        LoginResponse response =  new LoginResponse();
+        response.setJWT(jwt);
+        return ResponseEntity.ok(response);
+    }
+
     }
 }

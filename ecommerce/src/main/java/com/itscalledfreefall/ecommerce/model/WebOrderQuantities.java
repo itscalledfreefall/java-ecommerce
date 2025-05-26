@@ -1,5 +1,6 @@
 package com.itscalledfreefall.ecommerce.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +15,7 @@ public class WebOrderQuantities {
     @JoinColumn(name = "product_id",nullable = false)
     private Product product ;
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "order_id",nullable = false)
     private WebOrder webOrder;

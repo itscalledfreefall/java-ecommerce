@@ -6,7 +6,7 @@ public class LoginResponse {
     public String getJWT(){
         return jwt;
     }
-    public void setJWT(){
+    public void setJWT(String jwt){
         this.jwt = jwt;
     }
 }

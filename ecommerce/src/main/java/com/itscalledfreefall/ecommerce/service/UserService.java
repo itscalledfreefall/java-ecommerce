@@ -1,13 +1,18 @@
 package com.itscalledfreefall.ecommerce.service;
 
+import com.itscalledfreefall.ecommerce.api.model.LoginBody;
+import com.itscalledfreefall.ecommerce.api.model.LoginResponse;
 import com.itscalledfreefall.ecommerce.api.model.RegistrationBody;
 import com.itscalledfreefall.ecommerce.expections.UserAlreadyExistsException;
 import com.itscalledfreefall.ecommerce.model.LocalUser;
 import com.itscalledfreefall.ecommerce.model.dao.LocalUserDao;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 
 @Service
@@ -18,7 +23,7 @@ public class UserService {
     private JWTService jwtService;
 
 
-     private AuthenticationManager authManager;
+    private AuthenticationManager authManager;
 
 
     private EncryptionService encryptionService;
@@ -33,8 +38,8 @@ public class UserService {
         this.jwtService = jwtService;
     }
 
-    public LocalUser register(RegistrationBody registrationBody)throws UserAlreadyExistsException {
-        if(localUserDao.findLocalUsersByUsernameIgnoreCase(registrationBody.getUsername()).isPresent()){
+    public LocalUser register(RegistrationBody registrationBody) throws UserAlreadyExistsException {
+        if (localUserDao.findLocalUsersByUsernameIgnoreCase(registrationBody.getUsername()).isPresent()) {
             throw new UserAlreadyExistsException();
         }
         LocalUser user = new LocalUser();
@@ -45,21 +50,33 @@ public class UserService {
         user.setLastName(registrationBody.getLastName());
         return localUserDao.save(user);
     }
-    public String verify(LocalUser user){
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
-        if(authentication.isAuthenticated()){
+
+    public String verify(LocalUser user) {
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        if (authentication.isAuthenticated()) {
             return jwtService.generateToken(user.getUsername());
-        }
-        else{
+        } else {
             return "fail";
         }
 
-
     }
 
+    public String login(LoginBody loginBody) {
+        Optional<LocalUser> opUser = localUserDao.findLocalUsersByUsernameIgnoreCase(loginBody.getUsername());
+        if (opUser.isPresent()) {
+            LocalUser user = opUser.get();
 
-
-
-
-
+            if (encryptionService.verifyPassword(loginBody.getPassword(), user.getPassword())) {
+                return jwtService.generateToken(user.getUsername());
+            }
+        }
+        return null ;
+    }
 }
+
+
+
+
+
+
+
