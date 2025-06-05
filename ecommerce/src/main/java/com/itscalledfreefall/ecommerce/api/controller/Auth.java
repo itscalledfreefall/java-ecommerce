@@ -4,16 +4,15 @@ import com.itscalledfreefall.ecommerce.api.model.LoginBody;
 import com.itscalledfreefall.ecommerce.api.model.LoginResponse;
 import com.itscalledfreefall.ecommerce.api.model.RegistrationBody;
 import com.itscalledfreefall.ecommerce.expections.UserAlreadyExistsException;
+import com.itscalledfreefall.ecommerce.model.LocalUser;
 import com.itscalledfreefall.ecommerce.service.UserService;
 import jakarta.validation.Valid;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -47,6 +46,9 @@ public class Auth {
         response.setJWT(jwt);
         return ResponseEntity.ok(response);
     }
-
+        }
+    @GetMapping("/me")
+    public LocalUser getLoggedInUserProfile(@AuthenticationPrincipal LocalUser user){
+    return user;
     }
 }
