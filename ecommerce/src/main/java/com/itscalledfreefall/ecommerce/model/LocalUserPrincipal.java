@@ -15,6 +15,9 @@ public class LocalUserPrincipal implements UserDetails {
     public LocalUserPrincipal(LocalUser user){
         this.user =  user;
     }
+    public LocalUser getLocalUser() {
+        return user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
